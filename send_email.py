@@ -27,7 +27,7 @@ def send_email(to_email, subject, body, html_body=None):
         smtp.login(GMAIL_ADDRESS, APP_PASSWORD)
         smtp.send_message(msg)
 
-    print(f"✅ Email sent to {to_email}")
+    #print(f"✅ Email sent to {to_email}")
 
 def get_account_by_name(name):
     try:
@@ -36,15 +36,15 @@ def get_account_by_name(name):
         if user:
             return user.to_dict()  # Return entire user data
         else:
-            print(f"⚠️ No user found with name: {name}")
+            #print(f"⚠️ No user found with name: {name}")
             return None
     except Exception as e:
-        print("Error getting account by name:", e)
+        #print("Error getting account by name:", e)
         return None
 
 def get_tasks_due_soon():
     today = datetime.now().date()
-    print("📅 Today is:", today)
+    #print("📅 Today is:", today)
 
     tasks_due = {}
 
@@ -58,12 +58,12 @@ def get_tasks_due_soon():
             deadline = task_data.get("deadline")
             reminder_sent = task_data.get("reminder_sent", False)
 
-            print(f"\n🔍 Task: {task_data.get('name')}")
-            print("Raw deadline:", deadline)
-            print("Reminder sent:", reminder_sent)
+            #print(f"\n🔍 Task: {task_data.get('name')}")
+            #print("Raw deadline:", deadline)
+            #print("Reminder sent:", reminder_sent)
 
             if not deadline or reminder_sent:
-                print("⏭️ Skipping: No deadline or already reminded.")
+                #print("⏭️ Skipping: No deadline or already reminded.")
                 continue
 
             # Handle Firestore Timestamp or string deadline
@@ -73,16 +73,16 @@ def get_tasks_due_soon():
                 try:
                     deadline_date = datetime.strptime(deadline, "%m/%d/%Y").date()
                 except ValueError:
-                    print("⚠️ Invalid date format for deadline.")
+                    #print("⚠️ Invalid date format for deadline.")
                     continue
             else:
-                print("⚠️ Unsupported deadline format:", type(deadline))
+                #print("⚠️ Unsupported deadline format:", type(deadline))
                 continue
 
-            print("Parsed deadline date:", deadline_date)
+            #print("Parsed deadline date:", deadline_date)
 
             if (deadline_date - today).days != 3:
-                print("⏭️ Not 3 days away.")
+                #print("⏭️ Not 3 days away.")
                 continue
 
             # Process users
@@ -94,7 +94,7 @@ def get_tasks_due_soon():
                 user_account = get_account_by_name(username)
 
                 if user_account is None:
-                    print(f"⚠️ No account for user: {username}")
+                    #print(f"⚠️ No account for user: {username}")
                     continue
 
                 email = user_account["email"]
@@ -109,7 +109,7 @@ def get_tasks_due_soon():
                     }
 
                 tasks_due[email]["tasks"].append(task_data["name"])
-                print(f"✅ Added task '{task_data['name']}' for {email}")
+                #print(f"✅ Added task '{task_data['name']}' for {email}")
 
     return tasks_due
 
@@ -124,7 +124,7 @@ def get_all_users_names():
                 names.append(name)
         return names
     except Exception as e:
-        print("Error fetching user names:", e)
+        #print("Error fetching user names:", e)
         return []
 
 def send_upcoming_deadline_emails_grouped():
@@ -166,9 +166,9 @@ Thank you!
 
 
 if __name__ == "__main__":
-    # send_upcoming_deadline_emails_grouped()
+    send_upcoming_deadline_emails_grouped()
     
-    # print(get_all_users_names())
-    print(get_tasks_due_soon())
+    # #print(get_all_users_names())
+    #print(get_tasks_due_soon())
     
-    # print(GMAIL_ADDRESS)
+    # #print(GMAIL_ADDRESS)
